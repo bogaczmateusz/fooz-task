@@ -1,0 +1,224 @@
+// ─── FAQ Accordion Block ──────────────────────────────────────────────────────
+
+.wp-block-fooz-theme-faq-accordion {
+  // Design tokens — override via theme.json or custom CSS
+  --faq-primary: #2563eb;
+  --faq-primary-light: #eff6ff;
+  --faq-bg: #ffffff;
+  --faq-border: #e2e8f0;
+  --faq-text: #1e293b;
+  --faq-text-muted: #64748b;
+  --faq-answer-bg: #f8fafc;
+  --faq-number-bg: var(--faq-primary);
+  --faq-number-color: #ffffff;
+  --faq-number-size: 2rem;
+  --faq-radius: 0.625rem;
+  --faq-transition: 0.25s ease;
+  --faq-shadow: 0 1px 3px rgb(0 0 0 / 0.06), 0 1px 2px rgb(0 0 0 / 0.04);
+  --faq-shadow-hover: 0 4px 12px rgb(0 0 0 / 0.1);
+
+  width: 100%;
+  box-sizing: border-box;
+
+  // ── Heading ──────────────────────────────────────────────────────────────
+
+  .faq-accordion__heading {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--faq-text);
+    margin-block: 0 2rem;
+  }
+
+  // ── Items wrapper — owns the CSS counter ─────────────────────────────────
+
+  .faq-accordion__items {
+    counter-reset: faq-counter;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+// ─── FAQ Item Block ───────────────────────────────────────────────────────────
+
+.wp-block-fooz-theme-faq-item {
+  counter-increment: faq-counter;
+  border: 1px solid var(--faq-border, #e2e8f0);
+  border-radius: var(--faq-radius, 0.625rem);
+  background-color: var(--faq-bg, #ffffff);
+  box-shadow: var(--faq-shadow, 0 1px 3px rgb(0 0 0 / 0.06));
+  overflow: hidden;
+  transition: box-shadow var(--faq-transition, 0.25s ease);
+
+  &:hover {
+    box-shadow: var(--faq-shadow-hover, 0 4px 12px rgb(0 0 0 / 0.1));
+  }
+
+  // ── Shared number badge ───────────────────────────────────────────────────
+
+  .faq-item__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--faq-number-size, 2rem);
+    height: var(--faq-number-size, 2rem);
+    background-color: var(--faq-number-bg, #2563eb);
+    color: var(--faq-number-color, #ffffff);
+    border-radius: 50%;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+
+    &::before {
+      content: counter(faq-counter);
+    }
+  }
+
+  // ── Shared question text ──────────────────────────────────────────────────
+
+  .faq-item__question-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // FRONTEND  — button trigger (save.js output)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  .faq-item__trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    width: 100%;
+    padding: 1.125rem 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--faq-text, #1e293b);
+    transition: background-color var(--faq-transition, 0.25s ease);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--faq-primary-light, #eff6ff);
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 2px var(--faq-primary, #2563eb);
+    }
+
+    &[aria-expanded='true'] {
+      background-color: var(--faq-primary-light, #eff6ff);
+
+      .faq-item__icon--chevron-down {
+        display: none;
+      }
+
+      .faq-item__icon--chevron-up {
+        display: block;
+      }
+    }
+  }
+
+  // ── Icons ─────────────────────────────────────────────────────────────────
+
+  .faq-item__icons {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-inline-start: auto;
+    color: var(--faq-primary, #2563eb);
+  }
+
+  .faq-item__icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform var(--faq-transition, 0.25s ease);
+
+    &--chevron-up {
+      display: none;
+    }
+
+    &--chevron-down {
+      display: block;
+    }
+  }
+
+  // ── Answer panel — frontend ───────────────────────────────────────────────
+
+  .faq-item__answer {
+    padding: 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--faq-border, #e2e8f0);
+    background-color: var(--faq-answer-bg, #f8fafc);
+    color: var(--faq-text-muted, #64748b);
+    line-height: 1.75;
+
+    &[hidden] {
+      display: none;
+    }
+
+    .faq-item__answer-content {
+      margin: 0;
+      padding-top: 1rem;
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // EDITOR  — header div (edit.js output, always visible for editing)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  .faq-item__header {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1.125rem 1.25rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--faq-text, #1e293b);
+    border-bottom: 1px solid var(--faq-border, #e2e8f0);
+  }
+
+  .faq-item__answer-wrap {
+    padding: 1rem 1.25rem 1.25rem;
+    background-color: var(--faq-answer-bg, #f8fafc);
+    color: var(--faq-text-muted, #64748b);
+    line-height: 1.75;
+
+    .faq-item__answer-content {
+      margin: 0;
+    }
+  }
+}
+
+// ─── Responsive ──────────────────────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .wp-block-fooz-theme-faq-item {
+    .faq-item__trigger,
+    .faq-item__header {
+      gap: 0.625rem;
+      padding: 1rem;
+    }
+
+    .faq-item__number {
+      --faq-number-size: 1.75rem;
+      font-size: 0.75rem;
+    }
+
+    .faq-item__icon {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+
+    .faq-item__answer,
+    .faq-item__answer-wrap {
+      padding: 0 1rem 1rem;
+    }
+  }
+}

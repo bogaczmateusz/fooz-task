@@ -1,0 +1,35 @@
+{
+  "name": "fooz-theme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "WordPress theme boilerplate with separate SCSS and JS watchers (Sass + Vite).",
+  "scripts": {
+    "watch:css": "concurrently -k \"sass --watch src/assets/scss:build/assets/css --embed-source-map\" \"postcss build/assets/css/*.css --dir build/assets/css --map --watch\"",
+    "build:css": "sass src/assets/scss:build/assets/css --no-source-map --style=compressed && postcss build/assets/css/*.css --dir build/assets/css",
+    "watch:js": "vite build --watch",
+    "build:js": "vite build --minify",
+    "watch:blocks": "wp-scripts start --webpack-src-dir=src/blocks --output-path=build/blocks",
+    "build:blocks": "wp-scripts build --webpack-src-dir=src/blocks --output-path=build/blocks",
+    "watch": "concurrently -k \"npm:watch:css\" \"npm:watch:js\" \"npm:watch:blocks\"",
+    "build": "npm run build:css && npm run build:js && npm run build:blocks",
+    "lint": "eslint src/js/**/*.js --ext .js",
+    "lint:fix": "eslint src/js/**/*.js --ext .js --fix",
+    "format": "prettier --write \"src/js/**/*.js\"",
+    "format:check": "prettier --check \"src/js/**/*.js\""
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "devDependencies": {
+    "@wordpress/scripts": "^31.5.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.37.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "prettier": "^3.6.2",
+    "sass": "^1.93.2",
+    "vite": "^7.2.4"
+  }
+}
